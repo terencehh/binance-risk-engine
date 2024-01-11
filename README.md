@@ -10,6 +10,7 @@ Phase 1 - Risk Engine Script [COMPLETE]
 - Establish binance API connection
 - Continuously poll binance futures account balance every second
 - If unrealised loss exceeds > 5% of account equity, trigger order API to close all positions
+- Implement a cool-off period where unable to set orders until next day
 - Configure a cloud service deployment to run the script perpetually + whitelist the IP connection on binance
 
 Phase 2 - Trading Dashboard [TBD]
