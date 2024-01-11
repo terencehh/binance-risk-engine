@@ -2,6 +2,8 @@ import os
 import time
 from dotenv import load_dotenv
 from binance import Client
+from datetime import datetime
+import pytz
 
 
 def main():
@@ -18,7 +20,11 @@ def main():
         account_balance = float(account_info['balance'])
         unrealized_pnl = float(account_info['crossUnPnl'])
 
-        print('Equity: {} - Unrealized Equity: {} - Drawdown Threshold: {}'.format(account_balance, account_balance + unrealized_pnl, account_balance * (1 - risk_limit)))
+        print('Time: {} - Equity: {} - Unrealized Equity: {} - Drawdown Threshold: {}'.format(
+            datetime.now(pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d %H:%M:%S'),
+            account_balance,
+            account_balance + unrealized_pnl,
+            account_balance * (1 - risk_limit)))
 
         # drawdown breached, close all positions
         if (account_balance + unrealized_pnl) < (account_balance * (1 - risk_limit)):
@@ -36,7 +42,8 @@ def main():
                     quantity=abs(float(position['positionAmt'])),
                     reduceOnly="true",
                 )
-                print('Market Closed {} {} position'.format(position['symbol'], 'Long' if float(position['positionAmt']) > 0 else 'Short'))
+                print('Market Closed {} {} position'.format(position['symbol'],
+                                                            'Long' if float(position['positionAmt']) > 0 else 'Short'))
 
         # sleep until next second
         time.sleep(1.0 - ((time.monotonic() - start_time) % 1.0))
